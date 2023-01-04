@@ -38,4 +38,8 @@ export class ZMQLogger {
 
     this.sock.send(['log.audits', JSON.stringify(log)]);
   }
+
+  close() {
+    this.sock.close();
+  }
 }
