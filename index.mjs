@@ -1,6 +1,8 @@
-import { ZMQLogger, pinoLog } from './cores/sys-logger.mjs';
+import { logger, AuditLogger } from './cores/sys-logger.mjs';
+
+export { logger, AuditLogger };
 
 export default {
-  ZMQLogger,
-  pinoLog,
+  logger,
+  AuditLogger,
 };

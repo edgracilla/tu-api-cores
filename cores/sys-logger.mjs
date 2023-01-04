@@ -1,19 +1,19 @@
 import pino from 'pino';
 import { Publisher } from 'zeromq';
 
-export const pinoLog = pino({
+export const logger = pino({
   transport: {
     target: 'pino-pretty',
     options: { translateTime: true },
   },
 });
 
-export class ZMQLogger {
+export class AuditLogger {
   constructor(host) {
     this.sock = new Publisher();
     this.sock.connect(host);
 
-    pinoLog.info(`Log publisher connected to '${host}'`);
+    logger.info(`Log publisher connected to '${host}'`);
   }
 
   async publish(req, res, payload) {
@@ -25,7 +25,7 @@ export class ZMQLogger {
       method,
       statusCode,
       url,
-      log: undefined, // preserving order
+      log: undefined,
       apiVer: url.substring(1, 3),
       docId: req.params._id,
       access: accessId,
