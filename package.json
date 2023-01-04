@@ -1,0 +1,33 @@
+{
+  "name": "tu-api-cores",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edgracilla/tu-api-cores.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/edgracilla/tu-api-cores/issues"
+  },
+  "homepage": "https://github.com/edgracilla/tu-api-cores#readme",
+  "dependencies": {
+    "pino": "^8.8.0",
+    "pino-pretty": "^9.1.1",
+    "zeromq": "^6.0.0-beta.16"
+  },
+  "devDependencies": {
+    "eslint": "^8.31.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jest": "^27.2.0",
+    "eslint-plugin-security": "^1.5.0",
+    "jest": "^29.3.1"
+  }
+}
