@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 
 import Ajv from 'ajv';
-import lodash from 'lodash';
+import _get from 'lodash.get';
 import mongoose from 'mongoose';
 import MongoQS from 'mongo-querystring';
 import ApiError from './api-error.mjs';
@@ -69,7 +69,7 @@ export function getPrereqs(body, version) {
   const fields = Object.keys(props || {});
 
   const ret = fields.map((field) => {
-    const model = lodash.get(props, `${field}.prereq`);
+    const model = _get(props, `${field}.prereq`);
     return model ? [field, `${version}-${model}`] : null;
   });
 

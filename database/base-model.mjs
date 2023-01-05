@@ -74,10 +74,6 @@ class BaseModel {
     const doc = await this.findOne(query).exec();
     if (!doc) return null;
 
-    // Object.keys(update).forEach((key) => {
-    //   doc[key] = update[key];
-    // });
-
     let updDoc = await doc.set(update).save();
     updDoc = updDoc.toObject();
 
