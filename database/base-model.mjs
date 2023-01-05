@@ -1,11 +1,7 @@
-import lodash from 'lodash';
 import serialize from 'fast-safe-stringify';
-import { detailedDiff } from 'deep-object-diff';
 
 import { customAlphabet } from 'nanoid';
 import { basename, resolve } from 'path';
-
-const { cloneDeep, isEqual, get } = lodash;
 
 class BaseModel {
   /** init */
@@ -34,8 +30,6 @@ class BaseModel {
       const key = this._genKey(doc._id);
       await this.redis.set(key, serialize(doc));
     }
-
-    doc.changeLog = { created: true };
 
     return doc;
   }
@@ -76,54 +70,20 @@ class BaseModel {
 
   /** update */
 
-  static async _update(query, update, hard = false) {
+  static async _update(query, update) {
     const doc = await this.findOne(query).exec();
     if (!doc) return null;
 
-    const updKeys = Object.keys(update);
+    // Object.keys(update).forEach((key) => {
+    //   doc[key] = update[key];
+    // });
 
-    const plainDoc = doc.toObject();
-    const oldDoc = cloneDeep(plainDoc);
-
-    const mergeUnique = (arr1, arr2) => {
-      const result = arr1.concat(arr2).reduce((accum, item) => {
-        for (let i = 0; i < accum.length; i += 1) {
-          if (isEqual(accum[i], item)) return accum;
-        }
-
-        return [...accum, item];
-      }, []);
-
-      return result;
-    };
-
-    if (hard) {
-      // hard update (if array, overwrite array values with new ones)
-      updKeys.forEach((key) => { doc[key] = get(update, key); });
-    } else {
-      // soft update (if array, append new items to existing array)
-      const updClone = cloneDeep(update);
-
-      updKeys.forEach((key) => {
-        doc[key] = Array.isArray(doc[key])
-          ? mergeUnique(plainDoc[key], updClone[key])
-          : updClone[key];
-      });
-    }
-
-    const modifieds = doc.modifiedPaths();
-    let updDoc = await doc.save();
-
+    let updDoc = await doc.set(update).save();
     updDoc = updDoc.toObject();
 
     if (this.cache) {
       const key = this._genKey(updDoc._id);
       await this.redis.set(key, serialize(updDoc));
-    }
-
-    if (modifieds.length) {
-      updDoc.changeLog = detailedDiff(oldDoc, updDoc);
-      updDoc.modifieds = modifieds;
     }
 
     return updDoc;

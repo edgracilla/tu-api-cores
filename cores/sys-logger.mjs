@@ -33,7 +33,7 @@ export class AuditLogger {
     };
 
     if ([400, 401, 500].includes(statusCode) || ['POST', 'PATCH'].includes(method)) {
-      log.log = method === 'POST' ? payload : payload.changeLog || req.body;
+      log.log = method === 'POST' ? payload : req.body?.patchMap || req.body;
     }
 
     this.sock.send(['log.audits', JSON.stringify(log)]);
