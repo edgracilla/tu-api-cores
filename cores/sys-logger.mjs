@@ -32,8 +32,13 @@ export class AuditLogger {
       user: userId,
     };
 
-    if ([400, 401, 500].includes(statusCode) || ['POST', 'PATCH'].includes(method)) {
-      log.log = method === 'POST' ? payload : req.body?.patchMap || req.body;
+    if ([400, 401, 500].includes(statusCode)) {
+      switch (method) {
+        case 'POST': { log.log = payload; break; }
+        case 'PATCH': { log.log = req.body?.patchMap || req.body; break; }
+        case 'DELETE': { log.log = { message: payload?.message }; break; }
+        default: log.log = req.body;
+      }
     }
 
     this.sock.send(['log.audits', JSON.stringify(log)]);
