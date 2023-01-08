@@ -32,7 +32,7 @@ export class AuditLogger {
       user: userId,
     };
 
-    if ([400, 401, 500].includes(statusCode)) {
+    if ([400, 401, 403, 500].includes(statusCode)) {
       switch (method) {
         case 'POST': { log.log = payload; break; }
         case 'PATCH': { log.log = req.body?.patchMap || req.body; break; }
